@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>bookSearch</h2>
+<body>
+    <div>
+        <select id="book_class"></select>
+        <input id="bought_datepicker" value="10/10/2011" title="datepicker" style="width: 100%" />
+    </div>
+</body>
+<script>
+    $(function() {
+        $.ajax({
+            type: "POST",
+            url: "/Main/BookClass",
+            data: {"":""},
+            dataType: "json",
+        }).done(function (data) {
+            $("#book_class").kendoDropDownList({
+                dataTextField: "Text",
+                dataValueField: "Value",
+                dataSource: data,
+                index: 0
+            });
+            })
+        
+    })
+    $("#bought_datepicker").kendoDatePicker();
+</script>
