@@ -31,8 +31,14 @@ namespace workshop5.Models
         private List<SelectListItem> MapBookClassData(DataTable dt)
         {
             List<SelectListItem> result = new List<SelectListItem>();
+            result.Add(new SelectListItem()
+                {
+                    Text ="",
+                    Value =""
+                });
             foreach (DataRow row in dt.Rows)
             {
+                
                 result.Add(new SelectListItem()
                 {
                     Text = row["BookClassId"].ToString() + '-' + row["BookClass"].ToString(),
@@ -62,10 +68,16 @@ namespace workshop5.Models
             return this.MapBookKeeperData(dt);
         }
         private List<SelectListItem> MapBookKeeperData(DataTable dt)
-        {
+        {   
             List<SelectListItem> result = new List<SelectListItem>();
+            result.Add(new SelectListItem()
+                {
+                    Text = "",
+                    Value = ""
+                });
             foreach (DataRow row in dt.Rows)
             {
+                
                 result.Add(new SelectListItem()
                 {
                     Text = row["UserEname"].ToString(),
@@ -97,8 +109,14 @@ namespace workshop5.Models
         private List<SelectListItem> MapBookStatusData(DataTable dt)
         {
             List<SelectListItem> result = new List<SelectListItem>();
+            result.Add(new SelectListItem()
+                {
+                    Text = "",
+                    Value = ""
+                });
             foreach (DataRow row in dt.Rows)
             {
+                
                 result.Add(new SelectListItem()
                 {
                     Text = row["CodeName"].ToString(),

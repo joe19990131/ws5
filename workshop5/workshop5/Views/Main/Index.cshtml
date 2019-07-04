@@ -5,9 +5,43 @@
 
 <h2>bookSearch</h2>
 <body>
-    <div>
-        <select id="book_class"></select>
-        <input id="bought_datepicker" value="10/10/2011" title="datepicker" style="width: 100%" />
+    <div class="form-horizontal">
+
+        <div class="form-group"style="margin-bottom:20px">
+           <label class="col-md-2 control-label">書籍名稱</label>
+            <div class="col-md-10">
+                <input id="book_name" />
+            </div>
+        </div>
+
+        <div class="form-group"style="margin-bottom:20px">
+
+            <label class="col-md-2 control-label">書籍類別</label>
+            <div class="col-md-10">
+                <select id="book_class" class=" form-control"></select>
+            </div>
+        </div>
+
+        <div class="form-group"style="margin-bottom:20px">
+
+            <label class="col-md-2 control-label">借閱人</label>
+            <div class="col-md-10">
+                <select id="book_keeper" class="form-control"></select>
+            </div>
+        </div>
+
+        <div class="form-group"style="margin-bottom:20px">
+            <label class="col-md-2 control-label">書籍狀態</label>
+            <div class="col-md-10">
+                <select id="book_status" class="form-control"></select>
+            </div>
+        </div>
+        <div>
+            <button id="search_btn" type="button" class="btn btn-primary">搜尋</button>
+            <button id="insert_btn" type="button" class="btn btn-default">新增</button>
+            <button id="clear_btn" type="button" class="btn btn-default">清除</button>
+        </div>
+        <div id="book_grid"></div>
     </div>
 </body>
 <script>
@@ -25,7 +59,84 @@
                 index: 0
             });
             })
-        
+
+        $.ajax({
+            type: "POST",
+            url: "/Main/BookKeeper",
+            data: { "": "" },
+            dataType: "json",
+        }).done(function (data) {
+            $("#book_keeper").kendoDropDownList({
+                dataTextField: "Text",
+                dataValueField: "Value",
+                dataSource: data,
+                index: 0
+            });
+            })
+        $.ajax({
+            type: "POST",
+            url: "/Main/BookStatus",
+            data: { "": "" },
+            dataType: "json",
+        }).done(function (data) {
+            $("#book_status").kendoDropDownList({
+                dataTextField: "Text",
+                dataValueField: "Value",
+                dataSource: data,
+                index: 0
+            });
+        })
     })
     $("#bought_datepicker").kendoDatePicker();
+
+    $("#search_btn").click(function () {
+        var data = {
+            "BookName": $('#book_name').val(),
+            "BookClassId": $('#book_class').val(),
+            "BookKeeper": $('#book_keeper').val(),
+            "BookStatus": $('#book_status').val()
+        };
+        $("#book_grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        method: "post",
+                        url: "/Main/BookGrid",
+                        dataType: "json",
+                        data: data
+                    }
+                },
+                schema: {
+                    model: {
+                        fields: {
+                            BookClass: { type: "string" },
+                            BookName: { type: "string" },
+                            BoughtDate: { type: "string" },
+                            BookStatus: { type: "string" },
+                            BookKeeper: { type: "string" }
+                        }
+                    }
+                },
+                pageSize: 20,
+            },
+            height: 550,
+            sortable: true,
+            pageable: {
+                input: true,
+                numeric: false
+            },
+            columns: [
+                { field: "BookClass", title: "書籍種類", width: "10%" },
+                { field: "BookClass", title: "書籍名稱", width: "35%" },
+                { field: "BoughtDate", title: "購買日期", width: "15%" },
+                { field: "BookStatus", title: "書籍狀態", width: "15%" },
+                { field: "BookKeeper", title: "借閱人", width: "15%" },
+                { command: { text: "借閱紀錄", click: lendRecord }, title: " ", width: "120px" },
+                { command: { text: "刪除", click: deleteBook }, title: " ", width: "120px" }
+            ]
+
+        });
+    });
+    function lendRecord(e) { }
+    function deleteBook(e){ }
 </script>
