@@ -33,9 +33,9 @@ namespace workshop5.Models
                             INNER JOIN BOOK_CODE bc ON bd.BOOK_STATUS = bc.CODE_ID AND bc.CODE_TYPE = 'BOOK_STATUS'
                             LEFT JOIN MEMBER_M mm ON bd.BOOK_KEEPER = mm.[USER_ID]
                     where bd.BOOK_NAME LIKE '%'+@BookName+'%'
-                        and bd.BOOK_CLASS_ID LIKE @BookClassId+'%'
-                        and ISNULL(mm.USER_ENAME,'') LIKE '%'+@BookKeeper+'%'
-                        and bc.CODE_NAME LIKE @BookStatus+'%'
+                        and (bd.BOOK_CLASS_ID = @BookClassId OR ''=@BookClassId)
+                        and (ISNULL(mm.USER_ENAME,'') = @BookKeeper OR '' = @BookKeeper)
+                        and (bc.CODE_NAME = @BookStatus OR '' = @BookStatus)
                            ";
 
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
