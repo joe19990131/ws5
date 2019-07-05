@@ -33,7 +33,7 @@ namespace workshop5.Models
             List<SelectListItem> result = new List<SelectListItem>();
             result.Add(new SelectListItem()
                 {
-                    Text ="",
+                    Text ="請選擇",
                     Value =""
                 });
             foreach (DataRow row in dt.Rows)
@@ -41,7 +41,7 @@ namespace workshop5.Models
                 
                 result.Add(new SelectListItem()
                 {
-                    Text = row["BookClassId"].ToString() + '-' + row["BookClass"].ToString(),
+                    Text =row["BookClass"].ToString(),
                     Value = row["BookClassId"].ToString()
                 });
             }
@@ -72,7 +72,7 @@ namespace workshop5.Models
             List<SelectListItem> result = new List<SelectListItem>();
             result.Add(new SelectListItem()
                 {
-                    Text = "",
+                    Text = "請選擇",
                     Value = ""
                 });
             foreach (DataRow row in dt.Rows)
@@ -111,7 +111,7 @@ namespace workshop5.Models
             List<SelectListItem> result = new List<SelectListItem>();
             result.Add(new SelectListItem()
                 {
-                    Text = "",
+                    Text = "請選擇",
                     Value = ""
                 });
             foreach (DataRow row in dt.Rows)

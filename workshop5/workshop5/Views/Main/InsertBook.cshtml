@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewBag.Title = "InsertBook";
+}
+
+<h2>InsertBook</h2>
+
+<body>
+    <div class="form-horizontal">
+
+        <div class="form-group" style="margin-bottom:20px">
+            <label class="col-md-2 control-label">書籍名稱</label>
+            <div class="col-md-10">
+                <input id="book_name" class="col-md-3"/>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px">
+            <label class="col-md-2 control-label">作者</label>
+            <div class="col-md-10">
+                <input id="book_author" class="col-md-3"/>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px">
+            <label class="col-md-2 control-label">出版商</label>
+            <div class="col-md-10">
+                <input id="book_publisher" class="col-md-3"/>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px">
+            <label class="col-md-2 control-label">內容簡介</label>
+            <div class="col-md-10">
+                <textarea id="book_note" class="col-md-3"></textarea>
+            </div>
+        </div>
+
+
+        <div class="form-group" style="margin-bottom:20px">
+            <label class="col-md-2 control-label">購書日期</label>
+            <div class="col-md-3">
+                <input id="bought_datepicker" value="10/10/2011" title="datepicker" style="width: 100%" />
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom:20px">
+
+            <label class="col-md-2 control-label">書籍類別</label>
+            <div class="col-md-10">
+                <select id="book_class" class=" form-control"></select>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top:30px;margin-bottom:30px">
+           <div class="col-md-2"></div>
+            <input type="button" value="新增" class="btn btn-primary col-md-1"id="insert_btn">
+            <button onclick="location.href='/Main/Index'" class="btn btn-default">返回</button>
+        </div>
+
+    </div>
+</body>
+
+<script>
+    $(function () {
+        console.log("ready");
+        $.ajax({
+            type: "POST",
+            url: "/Main/BookClass",
+            data: { "": "" },
+            dataType: "json",
+        }).done(function (data) {
+            $("#book_class").kendoDropDownList({
+                dataTextField: "Text",
+                dataValueField: "Value",
+                dataSource: data,
+                index: 0
+            });
+        })
+
+
+        $("#bought_datepicker").kendoDatePicker();
+ })
+
+    
+    $("#insert_btn").click(function () {
+        var data = {
+            "BookName": $("#book_name").val(),
+            "BookAuthor": $("#book_author").val(),
+            "BookPublisher": $("#book_publisher").val(),
+            "BookNote": $("#book_note").val(),
+            "BoughtDate": $("#bought_datepicker").val(),
+            "BookClassId":$("#book_class").val()
+        };
+        $.ajax({
+            type: "POST",
+            url: "/Main/InsertBookJson",
+            data: data,
+            dataType: "json",
+        }).done(function (data) {
+            alert(data);
+            });
+        })
+   
+</script>

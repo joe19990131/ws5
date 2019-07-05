@@ -22,6 +22,7 @@ namespace workshop5.Models
             string sql = @"SELECT
                             bcl.BOOK_CLASS_NAME AS BookClass,
                             bd.BOOK_NAME AS BookName,
+                            bd.BOOK_ID AS BookId,
                             FORMAT(bd.BOOK_BOUGHT_DATE,'yyyy/MM/dd') AS BoughtDate,
                             bc.CODE_NAME AS BookStatus,
                             ISNULL(mm.USER_ENAME,'') AS BookKeeper
@@ -59,6 +60,7 @@ namespace workshop5.Models
                 result.Add(new Books()
                 {
                     BookName = row["BookName"].ToString(),
+                    BookId = (int)row["BookId"],
                     BookClass = row["BookClass"].ToString(),
                     BoughtDate = row["BoughtDate"].ToString(),
                     BookStatus = row["BookStatus"].ToString(),
@@ -69,7 +71,7 @@ namespace workshop5.Models
             return result;
         }
 
-        public void DeleteBookByName(int BookId)
+        public bool DeleteBookById(int BookId)
         {
             try
             {
@@ -82,6 +84,7 @@ namespace workshop5.Models
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
+                return true;
             }
             catch (Exception ex)
             {
@@ -121,6 +124,51 @@ namespace workshop5.Models
                 conn.Close();
             }
 
+        }
+
+        public List<Models.LendRecord> GetRecordByCondtioin(int bookId)
+        {
+            //sql更改
+            DataTable dt = new DataTable();
+            string sql = @"SELECT 
+                            FORMAT(blr.LEND_DATE,'yyyy/MM/dd') AS LendDate,
+                            blr.KEEPER_ID AS KeeperId,
+                            mm.USER_ENAME AS UserEname,
+                            mm.USER_CNAME AS UserCname
+                            FROM 
+                            BOOK_LEND_RECORD blr INNER JOIN MEMBER_M mm
+                            ON blr.KEEPER_ID = mm.USER_ID
+                            WHERE blr.BOOK_ID = @BookId";
+
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@BookId", bookId));
+
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+            }
+            return this.MapRecordDataToList(dt);
+        }
+
+        private List<LendRecord> MapRecordDataToList(DataTable dt)
+        {
+            List<Models.LendRecord> result = new List<LendRecord>();
+            foreach (DataRow row in dt.Rows)
+            {
+                result.Add(new LendRecord()
+                {
+                    LendDate = row["LendDate"].ToString(),
+                    KeeperId = row["KeeperId"].ToString(),
+                    UserEname = row["UserEname"].ToString(),
+                    UserCname = row["UserCname"].ToString()
+
+
+                });
+            }
+            return result;
         }
 
     }

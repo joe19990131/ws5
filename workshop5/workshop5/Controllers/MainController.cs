@@ -33,5 +33,25 @@ namespace workshop5.Controllers
         {
             return Json(this.bookService.GetBookByCondtioin(arg));
         }
+         [HttpPost()]
+        public JsonResult DeleteBook(int bookId) {
+                return Json(this.bookService.DeleteBookById(bookId));
+        }
+        [HttpGet()]
+        public ActionResult InsertBook()
+        {
+            return View();
+        }
+        [HttpPost()]
+        public JsonResult InsertBookJson(Models.Books book)
+        {
+            bookService.InsertBook(book);
+            return Json("新增成功");
+        }
+
+        public JsonResult LendRecord(int bookId)
+        {
+            return Json(this.bookService.GetRecordByCondtioin(bookId));
+        }
     }
 }
