@@ -15,6 +15,7 @@ namespace workshop5.Models
                 System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString();
         }
 
+        //search
         public List<Models.Books> GetBookByCondtioin(Models.Search arg)
         {
             //sql更改
@@ -52,6 +53,7 @@ namespace workshop5.Models
             return this.MapBooksDataToList(dt);
         }
 
+
         private List<Models.Books> MapBooksDataToList(DataTable bookData)
         {
             List<Models.Books> result = new List<Books>();
@@ -71,6 +73,7 @@ namespace workshop5.Models
             return result;
         }
 
+        //delete
         public bool DeleteBookById(int BookId)
         {
             try
@@ -92,6 +95,7 @@ namespace workshop5.Models
             }
         }
 
+        //insert
         public void InsertBook(Models.Books arg)
         {
             DataTable dt = new DataTable();
@@ -117,7 +121,7 @@ namespace workshop5.Models
                 cmd.Parameters.Add(new SqlParameter("@BookAuthor", arg.BookAuthor == null ? string.Empty : arg.BookAuthor));
                 cmd.Parameters.Add(new SqlParameter("@BookPublisher", arg.BookPublisher == null ? string.Empty : arg.BookPublisher));
                 cmd.Parameters.Add(new SqlParameter("@BookNote", arg.BookNote == null ? string.Empty : arg.BookNote));
-                cmd.Parameters.Add(new SqlParameter("@BoughtDate", arg.BoughtDate == null ? "1900/01/01" : arg.BoughtDate));
+                cmd.Parameters.Add(new SqlParameter("@BoughtDate", arg.BoughtDate == null ? (object)DBNull.Value : arg.BoughtDate));
                 cmd.Parameters.Add(new SqlParameter("@BookClassId", arg.BookClassId == null ? string.Empty : arg.BookClassId));
                 SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
                 sqlAdapter.Fill(dt);
@@ -126,6 +130,7 @@ namespace workshop5.Models
 
         }
 
+        //LendRecord
         public List<Models.LendRecord> GetRecordByCondtioin(int bookId)
         {
             //sql更改

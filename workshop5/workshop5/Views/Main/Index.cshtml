@@ -52,8 +52,8 @@
     $(function() {
         $.ajax({
             type: "POST",
-            url: "/Main/BookClass",
-            data: {"":""},
+            url: "/Main/DropDownList",
+            data: {"type":"class"},
             dataType: "json",
         }).done(function (data) {
             $("#book_class").kendoDropDownList({
@@ -66,8 +66,8 @@
 
         $.ajax({
             type: "POST",
-            url: "/Main/BookKeeper",
-            data: { "": "" },
+            url: "/Main/DropDownList",
+            data: { "type": "keeper" },
             dataType: "json",
         }).done(function (data) {
             $("#book_keeper").kendoDropDownList({
@@ -79,8 +79,8 @@
             })
         $.ajax({
             type: "POST",
-            url: "/Main/BookStatus",
-            data: { "": "" },
+            url: "/Main/DropDownList",
+            data: { "type": "status" },
             dataType: "json",
         }).done(function (data) {
             $("#book_status").kendoDropDownList({

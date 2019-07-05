@@ -15,19 +15,22 @@ namespace workshop5.Controllers
             return View();
         }
 
-        public JsonResult BookClass()
-        {
-            return Json(this.codeService.GetClassCodeTable());
-          
-        }
-        public JsonResult BookKeeper()
-        {
-            return Json(this.codeService.GetBookKeeperTable());
+        public JsonResult DropDownList(string type) {
+            switch (type){
+                case "class":
+                    return Json(this.codeService.GetClassCodeTable());
+                    break;
+                case "keeper":
+                    return Json(this.codeService.GetBookKeeperTable());
+                    break;
+                case "status":
+                    return Json(this.codeService.GetBookStatusTable());
+                    break;
+                default:
+                    return Json(true);
+            }
         }
 
-        public JsonResult BookStatus() {
-            return Json(this.codeService.GetBookStatusTable());
-        }
         [HttpPost()]
         public JsonResult BookGrid(Models.Search arg)
         {
