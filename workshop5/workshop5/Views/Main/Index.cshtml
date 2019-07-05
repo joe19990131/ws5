@@ -142,13 +142,16 @@
                 { field: "BookName", title: "書籍名稱", width: "30%" },
                 { field: "BoughtDate", title: "購買日期", width: "10%" },
                 { field: "BookStatus", title: "書籍狀態", width: "10%" },
-                { field: "BookKeeper", title: "借閱人", width: "10%" },
+                { field: "BookKeeper", title: "借閱人", width: "9%" },
+                { command: { text: "編輯", click: editBook }, title: " ", width: "50px" },
                 { command: { text: "借閱紀錄", click: lendRecord }, title: " ", width: "60px" },
-                { command: { text: "刪除", click: deleteBook }, title: " ", width: "50px" }
+                { command: { text: "刪除", click: deleteBook }, title: " ", width: "60px" }
             ]
 
         });
     });
+    function editBook(e) {
+    }
         function lendRecord(e) {
         e.preventDefault();
         var id = this.dataItem($(e.currentTarget).closest("tr")).BookId;
