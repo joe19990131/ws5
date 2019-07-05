@@ -25,30 +25,8 @@ namespace workshop5.Models
                 sqlAdapter.Fill(dt);
                 conn.Close();
             }
-            return this.MapBookClassData(dt);
+            return this.MapDropDownListData(dt,"BookClass","BookClassId");
         }
-        //Map未改
-        private List<SelectListItem> MapBookClassData(DataTable dt)
-        {
-            List<SelectListItem> result = new List<SelectListItem>();
-            result.Add(new SelectListItem()
-                {
-                    Text ="請選擇",
-                    Value =""
-                });
-            foreach (DataRow row in dt.Rows)
-            {
-                
-                result.Add(new SelectListItem()
-                {
-                    Text =row["BookClass"].ToString(),
-                    Value = row["BookClassId"].ToString()
-                });
-            }
-            return result;
-        }
-
-
 
         public List<SelectListItem> GetBookKeeperTable()
         {
@@ -65,28 +43,9 @@ namespace workshop5.Models
                 sqlAdapter.Fill(dt);
                 conn.Close();
             }
-            return this.MapBookKeeperData(dt);
+            return this.MapDropDownListData(dt,"UserEname","UserEname");
         }
-        private List<SelectListItem> MapBookKeeperData(DataTable dt)
-        {   
-            List<SelectListItem> result = new List<SelectListItem>();
-            result.Add(new SelectListItem()
-                {
-                    Text = "請選擇",
-                    Value = ""
-                });
-            foreach (DataRow row in dt.Rows)
-            {
-                
-                result.Add(new SelectListItem()
-                {
-                    Text = row["UserEname"].ToString(),
-                    Value = row["UserEname"].ToString()
-                });
-            }
-            return result;
-        }
-
+ 
 
         public List<SelectListItem> GetBookStatusTable()
         {
@@ -104,28 +63,8 @@ namespace workshop5.Models
                 sqlAdapter.Fill(dt);
                 conn.Close();
             }
-            return this.MapBookStatusData(dt);
+            return this.MapDropDownListData(dt,"CodeName","CodeName");
         }
-        private List<SelectListItem> MapBookStatusData(DataTable dt)
-        {
-            List<SelectListItem> result = new List<SelectListItem>();
-            result.Add(new SelectListItem()
-                {
-                    Text = "請選擇",
-                    Value = ""
-                });
-            foreach (DataRow row in dt.Rows)
-            {
-                
-                result.Add(new SelectListItem()
-                {
-                    Text = row["CodeName"].ToString(),
-                    Value = row["CodeName"].ToString()
-                });
-            }
-            return result;
-        }
-
 
         private string GetDBConnectionString()
         {
@@ -133,5 +72,24 @@ namespace workshop5.Models
                System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString();
         }
 
+        private List<SelectListItem> MapDropDownListData(DataTable dt,string text,string val)
+        {
+            List<SelectListItem> result = new List<SelectListItem>();
+            result.Add(new SelectListItem()
+            {
+                Text = "請選擇",
+                Value = ""
+            });
+            foreach (DataRow row in dt.Rows)
+            {
+
+                result.Add(new SelectListItem()
+                {
+                    Text = row[text].ToString(),
+                    Value = row[val].ToString()
+                });
+            }
+            return result;
+        }
     }
 }
