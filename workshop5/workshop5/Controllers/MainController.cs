@@ -61,5 +61,10 @@ namespace workshop5.Controllers
         {
             return Json(this.bookService.GetOriginData(bookId));
         }
+
+        public JsonResult UpdateData(Models.Books book) {
+            bookService.UpdateBookData(book);
+            return Json("修改成功");
+        }
     }
 }

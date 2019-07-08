@@ -261,18 +261,32 @@
             }
 
 
-        })
+            })
+
 
 
         $("#edit_window").data("kendoWindow").center().open();
         $("#save_edit_btn").click(function () {
+            var data = {
+                "BookId": id,
+                "BookName": $("#ed_book_name").val(),
+                "BookAuthor": $("#ed_book_author").val(),
+                "BookPublisher": $("#ed_book_publisher").val(),
+                "BookNote": $("#ed_book_note").val(),
+                "BoughtDate": $("#ed_bought_datepicker").val(),
+                "BookClassId": $("#ed_book_class").val(),
+                "BookStatusId": $("#ed_book_status").val(),
+                "BookKeeperId": $("#ed_book_keeper").val()
+            };
+             
             $.ajax({
                 type: "POST",
                 url: "/Main/UpdateData",
-                data: { "bookId": id },
+                data: data,
                 dataType: "json",
             }).done(function (data) {
-
+                alert(data);
+                $("#book_grid").data("kendoGrid").dataSource.read();
             }
                 )
 

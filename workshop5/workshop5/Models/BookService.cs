@@ -232,5 +232,43 @@ namespace workshop5.Models
             return result;
         }
 
+        public bool UpdateBookData(Models.Books arg)
+        {
+            DataTable dt = new DataTable();
+            string sql = @"UPDATE BOOK_DATA
+                            SET BOOK_NAME = @BookName,
+	                            BOOK_AUTHOR = @BookAuthor,
+	                            BOOK_PUBLISHER = @BookPublisher,
+	                            BOOK_NOTE = @BookNote,
+	                            BOOK_BOUGHT_DATE = CONVERT(DATETIME, @BoughtDate),
+	                            BOOK_CLASS_ID = @BookClassId,
+	                            BOOK_STATUS = @BookStatusId,
+	                            BOOK_KEEPER = @BookKeeperId
+                                
+                            WHERE BOOK_ID = @BookId";
+
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                cmd.Parameters.Add(new SqlParameter("@BookName", arg.BookName == null ? "" : arg.BookName.ToString()));
+                cmd.Parameters.Add(new SqlParameter("@BookAuthor", arg.BookAuthor == null ? "" : arg.BookAuthor.ToString()));
+                cmd.Parameters.Add(new SqlParameter("@BookPublisher", arg.BookPublisher == null ? "" : arg.BookPublisher.ToString()));
+                cmd.Parameters.Add(new SqlParameter("@BookNote", arg.BookNote == null ? "" : arg.BookNote.ToString()));
+                cmd.Parameters.Add(new SqlParameter("@BoughtDate", arg.BoughtDate.ToString()));
+                cmd.Parameters.Add(new SqlParameter("@BookClassId", arg.BookClassId.ToString()));
+                cmd.Parameters.Add(new SqlParameter("@BookStatusId", arg.BookStatusId.ToString()));
+                cmd.Parameters.Add(new SqlParameter("@BookKeeperId", arg.BookKeeperId == null ? "" : arg.BookKeeperId.ToString()));
+                cmd.Parameters.Add(new SqlParameter("@BookId", arg.BookId));
+               
+                sqlAdapter.Fill(dt);
+                conn.Close();
+            }
+
+            return true;
+        }
+
+
     }
 }
