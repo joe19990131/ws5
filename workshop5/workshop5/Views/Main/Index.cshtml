@@ -289,7 +289,25 @@
                 $("#book_grid").data("kendoGrid").dataSource.read();
             }
                 )
+            $("#edit_window").data("kendoWindow").close();
+        }
+        )
 
+        $("#delete_edit_btn").click(function () {
+            if (confirm("確定嗎??") == true) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Main/DeleteBook",
+                    data: { "bookId": id },
+                    dataType: "json",
+                }).done(function (e) {
+                    if (e == true)
+                        $("#book_grid").data("kendoGrid").dataSource.read();
+                    $("#edit_window").data("kendoWindow").close();
+                })
+
+            } else { }
+            return false;
         }
         )
     }
