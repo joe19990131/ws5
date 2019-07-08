@@ -130,6 +130,56 @@ namespace workshop5.Models
 
         }
 
+        public Models.Books GetOriginData(int BookId)
+        {
+            DataTable dt = new DataTable();
+            string sql = @"SELECT BOOK_ID AS BookId,
+                                    bd.BOOK_NAME AS BookName,
+		                            bd.BOOK_AUTHOR AS BookAuthor,
+		                            bd.BOOK_PUBLISHER AS BookPublisher,
+		                            bd.BOOK_NOTE AS BookNote,
+		                            FORMAT(bd.BOOK_BOUGHT_DATE, 'yyyy/MM/dd') AS BoughtDate,
+		                            bc1.BOOK_CLASS_ID AS BookClassId,
+		                            bc.CODE_NAME AS BookStatus,
+		                            mm.USER_ENAME AS BookKeeper
+                            FROM BOOK_DATA bd
+							INNER JOIN BOOK_CODE bc ON bd.BOOK_STATUS = bc.CODE_ID
+							INNER JOIN BOOK_CLASS bc1 ON bd.BOOK_CLASS_ID = bc1.BOOK_CLASS_ID
+							LEFT JOIN MEMBER_M mm ON bd.BOOK_KEEPER = mm.[USER_ID]
+                            WHERE bc.CODE_TYPE = 'BOOK_STATUS'
+							AND bd.BOOK_ID = @BookId";
+
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@BookId", BookId));
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+            }
+
+            return this.MapEditData(dt);
+        }
+
+        private Models.Books MapEditData(DataTable dt)
+        {
+            Models.Books result = new Models.Books();
+
+            result.BookId = (int)dt.Rows[0]["BookId"];
+            result.BookName = dt.Rows[0]["BookName"].ToString();
+            result.BookAuthor = dt.Rows[0]["BookAuthor"].ToString();
+            result.BookPublisher = dt.Rows[0]["BookPublisher"].ToString();
+            result.BookNote = dt.Rows[0]["BookNote"].ToString();
+            result.BoughtDate = dt.Rows[0]["BoughtDate"].ToString();
+            result.BookClassId = dt.Rows[0]["BookClassId"].ToString();
+            result.BookStatus = dt.Rows[0]["BookStatus"].ToString();
+            result.BookKeeper = dt.Rows[0]["BookKeeper"].ToString();
+
+            return result;
+        }
+
+
         //LendRecord
         public List<Models.LendRecord> GetRecordByCondtioin(int bookId)
         {

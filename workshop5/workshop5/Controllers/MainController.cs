@@ -56,5 +56,10 @@ namespace workshop5.Controllers
         {
             return Json(this.bookService.GetRecordByCondtioin(bookId));
         }
+
+        public JsonResult EditGetData(int bookId)
+        {
+            return Json(this.bookService.GetOriginData(bookId));
+        }
     }
 }

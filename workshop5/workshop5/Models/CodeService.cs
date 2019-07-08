@@ -50,8 +50,9 @@ namespace workshop5.Models
         public List<SelectListItem> GetBookStatusTable()
         {
             DataTable dt = new DataTable();
-            string sql = @"Select Distinct CODE_NAME AS CodeName  
-                           From BOOK_CODE
+            string sql = @"Select Distinct 
+                            CODE_NAME AS CodeName 
+                            From BOOK_CODE
                             where CODE_TYPE LIKE 'BOOK_STATUS'
                            ";
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))

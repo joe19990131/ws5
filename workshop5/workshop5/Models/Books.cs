@@ -23,8 +23,15 @@ namespace workshop5.Models
         [DisplayName("借閱狀態")]
         public string BookStatus { get; set; }
 
+        [DisplayName("借閱狀態ID")]
+        public string BookStatusId { get; set; }
+
+
         [DisplayName("借閱人")]
         public string BookKeeper { get; set; }
+
+        [DisplayName("借閱人ID")]
+        public string BookKeeperId { get; set; }
 
         [DisplayName("作者")]
         public string BookAuthor { get; set; }
