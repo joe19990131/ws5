@@ -43,7 +43,7 @@ namespace workshop5.Models
                 sqlAdapter.Fill(dt);
                 conn.Close();
             }
-            return this.MapDropDownListData(dt,"UserEname","UserEname");
+            return this.MapDropDownListData(dt,"UserEname","UserId");
         }
  
 
@@ -51,7 +51,8 @@ namespace workshop5.Models
         {
             DataTable dt = new DataTable();
             string sql = @"Select Distinct 
-                            CODE_NAME AS CodeName 
+                            CODE_NAME AS CodeName,
+                            CODE_ID AS CodeId
                             From BOOK_CODE
                             where CODE_TYPE LIKE 'BOOK_STATUS'
                            ";
@@ -64,7 +65,7 @@ namespace workshop5.Models
                 sqlAdapter.Fill(dt);
                 conn.Close();
             }
-            return this.MapDropDownListData(dt,"CodeName","CodeName");
+            return this.MapDropDownListData(dt,"CodeName","CodeId");
         }
 
         private string GetDBConnectionString()

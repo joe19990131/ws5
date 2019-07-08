@@ -188,8 +188,8 @@
         var data = {
             "BookName": $('#book_name').val(),
             "BookClassId": $('#book_class').val(),
-            "BookKeeper": $('#book_keeper').val(),
-            "BookStatus": $('#book_status').val()
+            "BookKeeperId": $('#book_keeper').val(),
+            "BookStatusId": $('#book_status').val()
         };
         $("#book_grid").kendoGrid({
             dataSource: {
@@ -251,8 +251,8 @@
             $("#ed_book_note").val(data.BookNote);
             $("#ed_bought_datepicker").data('kendoDatePicker').value(data.BoughtDate);
             $("#ed_book_class").data('kendoDropDownList').value(data.BookClassId);
-            $("#ed_book_status").data('kendoDropDownList').value(data.BookStatus);
-            $("#ed_book_keeper").data('kendoDropDownList').value(data.BookKeeper);
+            $("#ed_book_status").data('kendoDropDownList').value(data.BookStatusId);
+            $("#ed_book_keeper").data('kendoDropDownList').value(data.BookKeeperId);
             var originStatus = data.BookStatus;
             if (originStatus == "已借出" || originStatus == "已借出(未領)" || originStatus == "不可借出") {
                 $("#ed_book_keeper").kendoDropDownList({

@@ -26,7 +26,9 @@ namespace workshop5.Models
                             bd.BOOK_ID AS BookId,
                             FORMAT(bd.BOOK_BOUGHT_DATE,'yyyy/MM/dd') AS BoughtDate,
                             bc.CODE_NAME AS BookStatus,
-                            ISNULL(mm.USER_ENAME,'') AS BookKeeper
+                            bc.CODE_ID AS BookStatusId,
+                            ISNULL(mm.USER_ENAME,'') AS BookKeeper,
+                            ISNULL(bd.BOOK_KEEPER,'') AS BookKeeperId
                            FROM
                             BOOK_DATA bd 
                             INNER JOIN BOOK_CLASS bcl ON bd.BOOK_CLASS_ID = bcl.BOOK_CLASS_ID
@@ -34,8 +36,8 @@ namespace workshop5.Models
                             LEFT JOIN MEMBER_M mm ON bd.BOOK_KEEPER = mm.[USER_ID]
                     where bd.BOOK_NAME LIKE '%'+@BookName+'%'
                         and (bd.BOOK_CLASS_ID = @BookClassId OR ''=@BookClassId)
-                        and (ISNULL(mm.USER_ENAME,'') = @BookKeeper OR '' = @BookKeeper)
-                        and (bc.CODE_NAME = @BookStatus OR '' = @BookStatus)
+                        and (ISNULL(bd.BOOK_KEEPER,'') = @BookKeeperId OR '' = @BookKeeperId)
+                        and (bc.CODE_ID = @BookStatusId OR '' = @BookStatusId)
                            ";
 
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
@@ -44,8 +46,8 @@ namespace workshop5.Models
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add(new SqlParameter("@BookName", arg.BookName == null ? string.Empty : arg.BookName));
                 cmd.Parameters.Add(new SqlParameter("@BookClassId", arg.BookClassId == null ? string.Empty : arg.BookClassId));
-                cmd.Parameters.Add(new SqlParameter("@BookKeeper", arg.BookKeeper == null ? string.Empty : arg.BookKeeper));
-                cmd.Parameters.Add(new SqlParameter("@BookStatus", arg.BookStatus == null ? string.Empty : arg.BookStatus));
+                cmd.Parameters.Add(new SqlParameter("@BookKeeperId", arg.BookKeeperId == null ? string.Empty : arg.BookKeeperId));
+                cmd.Parameters.Add(new SqlParameter("@BookStatusId", arg.BookStatusId == null ? string.Empty : arg.BookStatusId));
                 SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
                 sqlAdapter.Fill(dt);
                 conn.Close();
@@ -141,7 +143,9 @@ namespace workshop5.Models
 		                            FORMAT(bd.BOOK_BOUGHT_DATE, 'yyyy/MM/dd') AS BoughtDate,
 		                            bc1.BOOK_CLASS_ID AS BookClassId,
 		                            bc.CODE_NAME AS BookStatus,
-		                            mm.USER_ENAME AS BookKeeper
+                                    bc.CODE_ID AS BookStatusId,
+		                            mm.USER_ENAME AS BookKeeper,
+                                    bd.BOOK_KEEPER AS BookKeeperId
                             FROM BOOK_DATA bd
 							INNER JOIN BOOK_CODE bc ON bd.BOOK_STATUS = bc.CODE_ID
 							INNER JOIN BOOK_CLASS bc1 ON bd.BOOK_CLASS_ID = bc1.BOOK_CLASS_ID
@@ -174,7 +178,9 @@ namespace workshop5.Models
             result.BoughtDate = dt.Rows[0]["BoughtDate"].ToString();
             result.BookClassId = dt.Rows[0]["BookClassId"].ToString();
             result.BookStatus = dt.Rows[0]["BookStatus"].ToString();
+            result.BookStatusId = dt.Rows[0]["BookStatusId"].ToString();
             result.BookKeeper = dt.Rows[0]["BookKeeper"].ToString();
+            result.BookKeeperId = dt.Rows[0]["BookKeeperId"].ToString();
 
             return result;
         }
