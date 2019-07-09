@@ -54,7 +54,7 @@ namespace workshop5.Models
                             CODE_NAME AS CodeName,
                             CODE_ID AS CodeId
                             From BOOK_CODE
-                            where CODE_TYPE LIKE 'BOOK_STATUS'
+                            where CODE_TYPE = 'BOOK_STATUS'
                            ";
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
             {

@@ -126,7 +126,11 @@
 </body>
 <script>
     $(function () {
-        $.ajax({
+        dropDownListAJAX("class", ".book-class");
+        dropDownListAJAX("keeper", ".book-keeper");
+        dropDownListAJAX("status", ".book-status");
+
+        /*$.ajax({
             type: "POST",
             url: "/Main/DropDownList",
             data: { "type": "class" },
@@ -165,7 +169,7 @@
                 dataSource: data,
                 index: 0
             });
-        })
+        })*/
         $("#book_name").kendoMaskedTextBox();
 
         $("#bought_datepicker").kendoDatePicker({ format: "yyyy/MM/dd" });
@@ -185,8 +189,13 @@
             action: ["Close"]
         });
     })
-   
+    var gridCount = 0;
     $("#search_btn").click(function () {
+        if (gridCount != 0) {
+            $("#book_grid").data('kendoGrid').destroy();
+        }
+       
+        gridCount++;
         var data = {
             "BookName": $('#book_name').val(),
             "BookClassId": $('#book_class').val(),
@@ -225,13 +234,13 @@
             },
             columns: [
                 { field: "BookClass", title: "書籍種類", width: "15%" },
-                { field: "BookName", title: "書籍名稱", width: "30%" },
+                { field: "BookName", title: "書籍名稱", width: "25%" },
                 { field: "BoughtDate", title: "購買日期", width: "10%" },
                 { field: "BookStatus", title: "書籍狀態", width: "10%" },
                 { field: "BookKeeper", title: "借閱人", width: "9%" },
-                { command: { text: "借閱紀錄", click: lendRecord }, title: " ", width: "60px" },
-                { command: { text: "編輯", click: editBook }, title: " ", width: "60px" },
-                { command: { text: "刪除", click: deleteBook }, title: " ", width: "60px" }
+                { command: { text: "借閱紀錄", click: lendRecord }, title: " ", width: "80px" },
+                { command: { text: "編輯", click: editBook }, title: " ", width: "80px" },
+                { command: { text: "刪除", click: deleteBook }, title: " ", width: "80px" }
             ]
 
         });
@@ -241,6 +250,7 @@
     function editBook(e) {
         e.preventDefault();
         var id = this.dataItem($(e.currentTarget).closest("tr")).BookId;
+        var book = this.dataItem($(e.currentTarget).closest("tr"));
         $.ajax({
             type: "POST",
             url: "/Main/EditGetData",
@@ -302,6 +312,7 @@
                 "BookStatusId": $("#ed_book_status").val(),
                 "BookKeeperId": $("#ed_book_keeper").val()
             };
+            if (confirm("確定嗎??") == true) {
                 $.ajax({
                     type: "POST",
                     url: "/Main/UpdateData",
@@ -312,13 +323,15 @@
                     $("#edit_window").data("kendoWindow").close();
                 }
                     )
-            
+            }
         }
         )
 
         $("#delete_edit_btn").unbind('click');
         $("#delete_edit_btn").click(function () {
-            if (confirm("確定嗎??") == true) {
+            if (book.BookStatus == "已借出" || book.BookStatus == "已借出(未領)") {
+                alert("該本書借出中無法刪除!");
+            }else if (confirm("確定嗎??") == true) {
                 $.ajax({
                     type: "POST",
                     url: "/Main/DeleteBook",
@@ -387,19 +400,22 @@
     }
     function deleteBook(e) {
         e.preventDefault();
-        var id = this.dataItem($(e.currentTarget).closest("tr")).BookId;
-        // console.log(id);
-        if (confirm("確定嗎??") == true) {
+        var book = this.dataItem($(e.currentTarget).closest("tr"));
+
+        console.log(book.BookStatus);
+        if (book.BookStatus == "已借出" || book.BookStatus == "已借出(未領)") {
+            alert("該本書借出中無法刪除!");
+        }else if (confirm("確定嗎??") == true) {
             $.ajax({
                 type: "POST",
                 url: "/Main/DeleteBook",
-                data: { "bookId": id },
+                data: { "bookId": book.BookId },
                 dataType: "json",
             }).done(function (e) {
                 if (e == true) $("#book_grid").data("kendoGrid").dataSource.read();
             })
 
-        } else { }
+        } else 
         return false;
     }
 
@@ -414,5 +430,22 @@
         var div = document.createElement('div');
         div.innerHTML = s;
         return div.innerText || div.textContent;
+    }
+
+    
+    function dropDownListAJAX(type, targetClass) {
+        $.ajax({
+            type: "POST",
+            url: "/Main/DropDownList",
+            data: { "type": type },
+            dataType: "json",
+        }).done(function (data) {
+            $(targetClass).kendoDropDownList({
+                dataTextField: "Text",
+                dataValueField: "Value",
+                dataSource: data,
+                index: 0
+            });
+        })
     }
 </script>

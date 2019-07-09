@@ -38,6 +38,7 @@ namespace workshop5.Models
                         and (bd.BOOK_CLASS_ID = @BookClassId OR ''=@BookClassId)
                         and (ISNULL(bd.BOOK_KEEPER,'') = @BookKeeperId OR '' = @BookKeeperId)
                         and (bc.CODE_ID = @BookStatusId OR '' = @BookStatusId)
+                    ORDER BY FORMAT(bd.BOOK_BOUGHT_DATE,'yyyy/MM/dd') DESC
                            ";
 
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
