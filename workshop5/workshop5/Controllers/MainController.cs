@@ -64,7 +64,7 @@ namespace workshop5.Controllers
 
         public JsonResult UpdateData(Models.Books book) {
             bookService.UpdateBookData(book);
-            return Json("修改成功");
+            return Json("");
         }
     }
 }

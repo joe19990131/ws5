@@ -167,23 +167,25 @@
             });
         })
         $("#book_name").kendoMaskedTextBox();
+
+        $("#bought_datepicker").kendoDatePicker({ format: "yyyy/MM/dd" });
+        $("#ed_bought_datepicker").kendoDatePicker({ format: "yyyy/MM/dd" });
+        $("#record_window").kendoWindow({
+            title: "借閱紀錄",
+            width: "50%",
+            visible: false,
+            modal: true,
+            action: ["Close"]
+        });
+        $("#edit_window").kendoWindow({
+            title: "編輯",
+            width: "35%",
+            visible: false,
+            modal: true,
+            action: ["Close"]
+        });
     })
-    $("#bought_datepicker").kendoDatePicker({ format: "yyyy/MM/dd" });
-    $("#ed_bought_datepicker").kendoDatePicker({ format: "yyyy/MM/dd" });
-    $("#record_window").kendoWindow({
-        title: "借閱紀錄",
-        width: "50%",
-        visible: false,
-        modal: true,
-        action: ["Close"]
-    });
-    $("#edit_window").kendoWindow({
-        title: "編輯",
-        width: "35%",
-        visible: false,
-        modal: true,
-        action: ["Close"]
-    });
+   
     $("#search_btn").click(function () {
         var data = {
             "BookName": $('#book_name').val(),
@@ -245,54 +247,76 @@
             data: { "bookId": id },
             dataType: "json",
         }).done(function (data) {
-            $("#ed_book_name").val(data.BookName);
-            $("#ed_book_author").val(data.BookAuthor);
-            $("#ed_book_publisher").val(data.BookPublisher);
-            $("#ed_book_note").val(data.BookNote);
+            $("#ed_book_name").val(htmldecode(data.BookName));
+            $("#ed_book_author").val(htmldecode(data.BookAuthor));
+            $("#ed_book_publisher").val(htmldecode(data.BookPublisher));
+            $("#ed_book_note").val(htmldecode(data.BookNote));
             $("#ed_bought_datepicker").data('kendoDatePicker').value(data.BoughtDate);
             $("#ed_book_class").data('kendoDropDownList').value(data.BookClassId);
             $("#ed_book_status").data('kendoDropDownList').value(data.BookStatusId);
             $("#ed_book_keeper").data('kendoDropDownList').value(data.BookKeeperId);
-            var originStatus = data.BookStatus;
-            if (originStatus == "已借出" || originStatus == "已借出(未領)" || originStatus == "不可借出") {
+            var originStatus = data.BookStatusId;
+            if (originStatus == "U" || originStatus == "A") {
+                $("#ed_book_keeper").data('kendoDropDownList').value("");
                 $("#ed_book_keeper").kendoDropDownList({
                     enable: false
                 });
+            } else {
+                $("#ed_book_keeper").kendoDropDownList({
+                    enable: true
+                });
+                
             }
-
-
             })
-
-
-
+       
+        $("#ed_book_status").change(function () {
+            var tmp = $("#ed_book_status").val();
+            console.log(tmp);
+            if (tmp == "A") {
+                console.log('its work!!');
+                $("#ed_book_keeper").kendoDropDownList({
+                    enable: true
+                });
+                $("#ed_book_keeper").data('kendoDropDownList').value("");
+                }
+            })
         $("#edit_window").data("kendoWindow").center().open();
+       
+       
+        $("#save_edit_btn").unbind('click');
         $("#save_edit_btn").click(function () {
+            /*var bookname = htmlencode($("#ed_book_name").val()).toString();
+            var bookauthor = htmlenencode($("#ed_book_author").val()).toString();
+            var bookpublisher = htmlenencode($("#ed_book_publisher").val()).toString();
+            var booknote = htmlenencode($("#ed_book_note").val()).toString();*/
+
+            //debugger;
             var data = {
                 "BookId": id,
-                "BookName": $("#ed_book_name").val(),
-                "BookAuthor": $("#ed_book_author").val(),
-                "BookPublisher": $("#ed_book_publisher").val(),
-                "BookNote": $("#ed_book_note").val(),
+                "BookName": htmlencode($("#ed_book_name").val()),
+                "BookAuthor": htmlencode($("#ed_book_author").val()),
+                "BookPublisher": htmlencode($("#ed_book_publisher").val()),
+                "BookNote": htmlencode($("#ed_book_note").val()),
                 "BoughtDate": $("#ed_bought_datepicker").val(),
                 "BookClassId": $("#ed_book_class").val(),
                 "BookStatusId": $("#ed_book_status").val(),
                 "BookKeeperId": $("#ed_book_keeper").val()
             };
-             
-            $.ajax({
-                type: "POST",
-                url: "/Main/UpdateData",
-                data: data,
-                dataType: "json",
-            }).done(function (data) {
-                alert(data);
-                $("#book_grid").data("kendoGrid").dataSource.read();
-            }
-                )
-            $("#edit_window").data("kendoWindow").close();
+                $.ajax({
+                    type: "POST",
+                    url: "/Main/UpdateData",
+                    data: data,
+                    dataType: "json",
+                }).done(function (data) {
+                    $("#book_grid").data("kendoGrid").dataSource.read();
+                    $("#edit_window").data("kendoWindow").close();
+                }
+                    )
+            
         }
         )
 
+        $("#delete_edit_btn").unbind('click');
         $("#delete_edit_btn").click(function () {
             if (confirm("確定嗎??") == true) {
                 $.ajax({
@@ -301,10 +325,13 @@
                     data: { "bookId": id },
                     dataType: "json",
                 }).done(function (e) {
-                    if (e == true)
+                    if (e == true) {
                         $("#book_grid").data("kendoGrid").dataSource.read();
-                    $("#edit_window").data("kendoWindow").close();
-                })
+                        $("#edit_window").data("kendoWindow").close();
+                    }
+                        
+                    })
+                alert("delete success");
 
             } else { }
             return false;
@@ -374,5 +401,18 @@
 
         } else { }
         return false;
+    }
+
+    //html encode 、decode
+
+    function htmlencode(s) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(s));
+        return div.innerHTML;
+    }
+    function htmldecode(s) {
+        var div = document.createElement('div');
+        div.innerHTML = s;
+        return div.innerText || div.textContent;
     }
 </script>
